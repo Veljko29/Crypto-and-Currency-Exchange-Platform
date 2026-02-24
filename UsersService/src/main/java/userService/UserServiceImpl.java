@@ -129,12 +129,7 @@ public class UserServiceImpl implements UsersService {
 			if (dto.getRole().toUpperCase().equals("OWNER") && repo.existsByRole(dto.getRole().toUpperCase())) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("There is already one OWNER in database.");
 			}
-
-////			if(repo.findByEmail(dto.getEmail())!=null) {
-////				return ResponseEntity.status(HttpStatus.CONFLICT).body("There is already one user with that email in database.");
-////			}
-////			
-//			
+		
 			repo.updateUser(dto.getEmail(), dto.getPassword(), dto.getRole().toUpperCase());
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 
