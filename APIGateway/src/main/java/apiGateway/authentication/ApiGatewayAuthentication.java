@@ -103,8 +103,10 @@ public class ApiGatewayAuthentication {
 
 	@Bean
 	ReactiveUserDetailsService reactiveUserDetailsService(WebClient.Builder webClientBuilder, PasswordEncoder encoder) {
-	    WebClient client = webClientBuilder.baseUrl("http://localhost:8770").build();
-		//WebClient client = webClientBuilder.baseUrl("http://users-service:8770").build();
+	    //WebClient client = webClientBuilder.baseUrl("http://localhost:8770").build();
+		
+		//Docer
+		WebClient client = webClientBuilder.baseUrl("http://users-service:8770").build();
 	    
 	    return user -> client.get()
 	            .uri(uriBuilder -> uriBuilder
