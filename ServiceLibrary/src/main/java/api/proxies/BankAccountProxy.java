@@ -15,16 +15,16 @@ import api.dtos.BankAccountDto;
 @FeignClient("bank-account")
 public interface BankAccountProxy {
 	
-	@PostMapping("/bank-account/create")
+	@PostMapping("/bank-accounts/create")
 	ResponseEntity<?> createBankAccountFeign(@RequestBody BankAccountDto dto);
 	
-	@DeleteMapping("/bank-account/remove")
+	@DeleteMapping("/bank-accounts/remove")
 	ResponseEntity<String> deleteBankAccountFeign(@RequestParam(value="email") String email);
 	
-	@GetMapping("/bank-account/email")
+	@GetMapping("/bank-accounts/email")
 	ResponseEntity<BankAccountDto> getBankAccountByEmailFeign(@RequestHeader("X-User-Email") String email);
 	
-	@PutMapping("/bank-account/update")
+	@PutMapping("/bank-accounts/update")
 	ResponseEntity<?> updateBankAccount(@RequestBody BankAccountDto dto);
 
 }

@@ -19,7 +19,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService{
 	private CurrencyExchangeRepository repo;
 	 
 	@Autowired
-	private Environment environment; //za prenos porta koji je izvrsio zahtev
+	private Environment environment;//prrenos porta
 	
 	@Override
 	public ResponseEntity<?> getCurrencyExchange(String from, String to) {
@@ -29,7 +29,6 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService{
 		if(!isValidCurrency(from)) missingCurrency = from;
 //		proveriti da li to parametar odgovara nekoj valuti
 		else if(!isValidCurrency(to)) missingCurrency = to;
-//		provera da li je missingCurrency razlicit od null i ako jeste bacanje domain exception-a
 		if(missingCurrency != null) throw new 
 		CurrencyDoesntExistException(String.format("Currency %s does not exist in the database", missingCurrency),
 				validCurrencies);

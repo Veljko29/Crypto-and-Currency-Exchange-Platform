@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UsersService {
 
 	@Autowired
 	private CryptoWalletProxy walletProxy;
-
+    @GetMapping("/users") 
 	@Override
 	public ResponseEntity<?> getUsers() {
 		List<UserModel> models = repo.findAll();
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UsersService {
 	}
 
 	@Override
+	@GetMapping("/users/email")
 	public ResponseEntity<?> getUserByEmail(String email) {
 		UserModel model = repo.findByEmail(email);
 		if (model == null) {

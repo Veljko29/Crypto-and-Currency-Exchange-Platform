@@ -1,4 +1,4 @@
-package cryptoWallet;
+package tradeService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,12 +6,12 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"cryptoWallet","util.exceptions"})
 @EnableFeignClients(basePackages = {"api.proxies"})
-public class CryptoWalletApplication {
+@ComponentScan(basePackages = { "tradeService","util.exceptions", "api.services"})
+public class TradeServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CryptoWalletApplication.class, args);
+		SpringApplication.run(TradeServiceApplication.class, args);
 	}
 
 }

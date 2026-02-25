@@ -13,6 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
@@ -33,6 +35,7 @@ public class ApiGatewayAuthentication {
 		.csrf(csrf -> csrf.disable())
 		.authorizeExchange(exchange -> exchange
 				.pathMatchers("/currency-exchange").hasAnyRole("ADMIN","OWNER","USER")
+				.pathMatchers("/currency-conversion-feign").hasRole("USER")
 				.pathMatchers("/currency-conversion").hasRole("USER")
 				.pathMatchers(HttpMethod.PUT,"/users/updateUser").hasAnyRole("ADMIN","OWNER")
 				.pathMatchers(HttpMethod.POST, "/users/newUser").hasAnyRole("ADMIN","OWNER")
@@ -99,7 +102,7 @@ public class ApiGatewayAuthentication {
 	}
 
 	@Bean
-	ReactiveUserDetailsService reactiveUserDetailsService(WebClient.Builder webClientBuilder, BCryptPasswordEncoder encoder) {
+	ReactiveUserDetailsService reactiveUserDetailsService(WebClient.Builder webClientBuilder, PasswordEncoder encoder) {
 	    WebClient client = webClientBuilder.baseUrl("http://localhost:8770").build();
 		//WebClient client = webClientBuilder.baseUrl("http://users-service:8770").build();
 	    
@@ -114,16 +117,17 @@ public class ApiGatewayAuthentication {
 	                      resp -> reactor.core.publisher.Mono.error(
 	                              new org.springframework.security.authentication.BadCredentialsException("User not found")))
 	            .bodyToMono(UserDto.class)
+	            .doOnNext(dto -> System.out.println("[GW] Fetched user: " + dto.getEmail() + ", pass: " + dto.getPassword()))  // dodaj ovo
 	            .map(dto -> User.withUsername(dto.getEmail())
-	                    .password(encoder.encode(dto.getPassword()))
+	                    .password("{noop}" + dto.getPassword())
 	                    .roles(dto.getRole())
 	                    .build()
 	            );
 	}
 	
 	@Bean
-	BCryptPasswordEncoder getEncoder() {
-		return new BCryptPasswordEncoder();
+	PasswordEncoder getEncoder() {
+	    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
 }
